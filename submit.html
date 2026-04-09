@@ -5,6 +5,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Submit a Price – Guinness Finland</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #pin-map {
+      width: 100%;
+      height: 260px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      margin-top: 8px;
+      z-index: 1;
+    }
+    .map-instructions {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .pin-status {
+      font-size: 0.78rem;
+      margin-top: 6px;
+      min-height: 18px;
+    }
+    .pin-status.set { color: #2ecc71; }
+    .pin-status.unset { color: #e74c3c; }
+    .locate-btn {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 11px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+    .locate-btn:hover { background: rgba(245,166,35,0.1); }
+    .divider {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin: 18px 0 4px;
+      position: relative;
+    }
+    .divider::before, .divider::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background: var(--border);
+    }
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+  </style>
 </head>
 <body>
 
@@ -50,7 +104,24 @@
       </div>
     </div>
 
-    <!-- Honeypot – hidden from real users, bots fill this in -->
+    <!-- ── Location: Map Pin ── -->
+    <div class="form-group">
+      <label>Pin the Pub on the Map</label>
+      <p class="map-instructions">Tap the map to drop a pin on the pub's exact location.</p>
+      <div id="pin-map"></div>
+      <button class="locate-btn" id="locateBtn">📍 Use My Current Location</button>
+      <div class="pin-status unset" id="pinStatus">No pin set yet</div>
+    </div>
+
+    <!-- ── Location: Google Maps link (alternative) ── -->
+    <div class="divider">or paste a Google Maps link</div>
+    <div class="form-group">
+      <label for="gmapsLink">Google Maps Link <span style="color:var(--muted);font-size:0.75rem">(optional)</span></label>
+      <input type="url" id="gmapsLink" placeholder="https://maps.google.com/..." autocomplete="off" />
+      <div class="map-instructions">Open Google Maps, find the pub, tap Share → Copy link, paste here.</div>
+    </div>
+
+    <!-- Honeypot -->
     <div class="hp-field">
       <input type="text" id="hp" tabindex="-1" autocomplete="off" />
     </div>
@@ -60,6 +131,7 @@
 
   <div class="toast" id="toast"></div>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module" src="submit.js"></script>
 </body>
 </html>
