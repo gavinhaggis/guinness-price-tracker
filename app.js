@@ -31,7 +31,8 @@ function priceColor(price) {
   return "var(--red)";
 }
 
-// ── Init map ──
+// ── Marker store (key = pubName__city) ──
+const markerStore = {};
 const map = L.map("map").setView([64.5, 26.0], 5);
 L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
   attribution: '© <a href="https://carto.com/">CARTO</a>',
@@ -80,7 +81,7 @@ function renderMap(pubs) {
       : [fallback[0] + jitter(), fallback[1] + jitter()];
     const stale = Date.now() - pub.timestamp > STALE_MS;
 
-    const marker = L.circleMarker(pos, {
+    const m = L.circleMarker(pos, {
       radius: 9,
               fillColor: pinColor(pub.price, stale),
       color: "#0d0d0d",
@@ -89,12 +90,14 @@ function renderMap(pubs) {
       fillOpacity: 0.9,
     }).addTo(map);
 
-    marker.bindPopup(`
+    m.bindPopup(`
       <div class="popup-pub">${pub.pubName}${stale ? '<span class="stale-badge">OLD</span>' : ''}</div>
       <div class="popup-city">${pub.city}</div>
       <div class="popup-price">€${pub.price.toFixed(2)}</div>
       <div class="popup-meta">Based on ${pub.count} report${pub.count > 1 ? "s" : ""} · Added by ${pub.submittedBy || "Anonymous"}</div>
     `);
+
+    markerStore[`${pub.pubName}__${pub.city}`] = m;
   });
 }
 
@@ -113,6 +116,15 @@ function renderStats(pubs) {
   document.getElementById("stat-count").textContent = pubs.length;
 }
 
+// ── Fly to marker ──
+function flyToMarker(pubName, city) {
+  const m = markerStore[`${pubName}__${city}`];
+  if (!m) return;
+  map.flyTo(m.getLatLng(), 15, { duration: 1 });
+  setTimeout(() => m.openPopup(), 1000);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 // ── Leaderboard ──
 function renderLeaderboard(pubs) {
   const sorted = [...pubs].sort((a, b) => a.price - b.price).slice(0, 8);
@@ -122,7 +134,7 @@ function renderLeaderboard(pubs) {
       <span>Pub</span><span>Price</span>
     </div>
     ${sorted.map((p, i) => `
-      <div class="leaderboard-row">
+      <div class="leaderboard-row" onclick="flyToMarker('${p.pubName.replace(/'/g, "\\'")}', '${p.city}')" style="cursor:pointer">
         <div class="rank">${i + 1}</div>
         <div class="pub-info">
           <div class="pub-name">${p.pubName}</div>
@@ -158,7 +170,7 @@ function renderCityAverages(pubs) {
 function renderRecent(submissions) {
   const sorted = [...submissions].sort((a, b) => b.timestamp - a.timestamp).slice(0, 10);
   document.getElementById("recent-list").innerHTML = sorted.map(s => `
-    <div class="recent-card">
+    <div class="recent-card" onclick="flyToMarker('${s.pubName.replace(/'/g, "\\'")}', '${s.city}')" style="cursor:pointer">
       <div>
         <div class="r-pub">${s.pubName}</div>
         <div class="r-city">${s.city} · ${s.submittedBy || "Anonymous"}</div>
@@ -170,6 +182,9 @@ function renderRecent(submissions) {
     </div>
   `).join("");
 }
+
+// ── Expose flyToMarker globally (required for inline onclick handlers) ──
+window.flyToMarker = flyToMarker;
 
 // ── Helpers ──
 function timeAgo(ts) {
