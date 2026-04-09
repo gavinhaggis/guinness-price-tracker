@@ -1,4 +1,4 @@
-# 🍺 Guinness Price Tracker — Finland
+# Spot the G 🍺 Finnish Guinness Tracker
 
 > *Because a good pint shouldn't cost a surprise.*
 
