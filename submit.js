@@ -72,6 +72,7 @@ function extractCoordsFromGmaps(url) {
 
 // ── Submit ──
 btn.addEventListener("click", async () => {
+  const submitterName = document.getElementById("submitterName").value.trim();
   const pubName = document.getElementById("pubName").value.trim();
   const city    = document.getElementById("city").value;
   const price   = parseFloat(document.getElementById("price").value);
@@ -94,6 +95,7 @@ btn.addEventListener("click", async () => {
       price,
       lat: pinLat,
       lng: pinLng,
+      submittedBy: submitterName || "Anonymous",
       timestamp: Date.now(),
     });
 
