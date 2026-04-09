@@ -18,6 +18,19 @@ const CITY_COORDS = {
 
 const STALE_MS = 90 * 24 * 60 * 60 * 1000; // 90 days
 
+function pinColor(price, stale) {
+  if (stale)       return "#666";
+  if (price < 8)   return "#2ecc71";
+  if (price <= 10) return "#f5a623";
+  return "#e74c3c";
+}
+
+function priceColor(price) {
+  if (price < 8)   return "var(--green)";
+  if (price <= 10) return "var(--gold)";
+  return "var(--red)";
+}
+
 // ── Init map ──
 const map = L.map("map").setView([64.5, 26.0], 5);
 L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
@@ -69,7 +82,7 @@ function renderMap(pubs) {
 
     const marker = L.circleMarker(pos, {
       radius: 9,
-      fillColor: stale ? "#e74c3c" : "#f5a623",
+              fillColor: pinColor(pub.price, stale),
       color: "#0d0d0d",
       weight: 2,
       opacity: 1,
@@ -115,7 +128,7 @@ function renderLeaderboard(pubs) {
           <div class="pub-name">${p.pubName}</div>
           <div class="pub-city">${p.city}</div>
         </div>
-        <div class="price ${i === 0 ? "badge-cheap" : ""}">€${p.price.toFixed(2)}</div>
+        <div class="price" style="color:${priceColor(p.price)}">€${p.price.toFixed(2)}</div>
       </div>
     `).join("")}
   `;
@@ -151,7 +164,7 @@ function renderRecent(submissions) {
         <div class="r-city">${s.city} · ${s.submittedBy || "Anonymous"}</div>
       </div>
       <div style="text-align:right">
-        <div class="r-price">€${s.price.toFixed(2)}</div>
+        <div class="r-price" style="color:${priceColor(s.price)}">€${s.price.toFixed(2)}</div>
         <div class="r-time">${timeAgo(s.timestamp)}</div>
       </div>
     </div>
