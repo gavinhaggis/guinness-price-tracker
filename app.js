@@ -59,10 +59,12 @@ function buildPubMap(submissions) {
 // ── Map pins ──
 function renderMap(pubs) {
   pubs.forEach(pub => {
-    const coords = CITY_COORDS[pub.city] || CITY_COORDS["Other"];
-    // Jitter pins slightly so multiple pubs in same city don't overlap
+    // Use exact coords if available, fall back to city centre + jitter
     const jitter = () => (Math.random() - 0.5) * 0.06;
-    const pos = [coords[0] + jitter(), coords[1] + jitter()];
+    const fallback = CITY_COORDS[pub.city] || CITY_COORDS["Other"];
+    const pos = (pub.lat && pub.lng)
+      ? [pub.lat, pub.lng]
+      : [fallback[0] + jitter(), fallback[1] + jitter()];
     const stale = Date.now() - pub.timestamp > STALE_MS;
 
     const marker = L.circleMarker(pos, {
