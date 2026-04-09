@@ -107,6 +107,7 @@
     <div class="legend-row"><div class="legend-dot" style="background:#f5a623"></div> €8 – €10</div>
     <div class="legend-row"><div class="legend-dot" style="background:#e74c3c"></div> Over €10</div>
     <div class="legend-row"><div class="legend-dot" style="background:#888; border: 1px dashed #e74c3c"></div> Stale data</div>
+    <div class="legend-row"><div class="legend-dot" style="background:#cbdbfc; border: 2px solid #ffffff"></div> Your location</div>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -208,6 +209,37 @@
         map.fitBounds(bounds, { padding: [40, 40] });
       }
     });
+
+    // ── User location ──
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        ({ coords: { latitude: lat, longitude: lng } }) => {
+          // Pulsing circle marker to distinguish from pub pins
+          const userMarker = L.circleMarker([lat, lng], {
+            radius: 8,
+            fillColor: "#cbdbfc",
+            color: "#ffffff",
+            weight: 2,
+            fillOpacity: 0.9,
+          }).addTo(map);
+
+          userMarker.bindPopup(`
+            <div class="popup-pub">📍 You are here</div>
+            <div class="popup-city" style="color:#cbdbfc">Your current location</div>
+          `);
+
+          // Accuracy circle
+          L.circle([lat, lng], {
+            radius: 80,
+            fillColor: "#cbdbfc",
+            fillOpacity: 0.1,
+            color: "#cbdbfc",
+            weight: 1,
+          }).addTo(map);
+        },
+        () => {} // silently fail if user denies
+      );
+    }
   </script>
 </body>
 </html>
