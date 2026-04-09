@@ -80,7 +80,7 @@ function renderMap(pubs) {
       <div class="popup-pub">${pub.pubName}${stale ? '<span class="stale-badge">OLD</span>' : ''}</div>
       <div class="popup-city">${pub.city}</div>
       <div class="popup-price">€${pub.price.toFixed(2)}</div>
-      <div class="popup-meta">Based on ${pub.count} report${pub.count > 1 ? "s" : ""}</div>
+      <div class="popup-meta">Based on ${pub.count} report${pub.count > 1 ? "s" : ""} · Added by ${pub.submittedBy || "Anonymous"}</div>
     `);
   });
 }
@@ -148,7 +148,7 @@ function renderRecent(submissions) {
     <div class="recent-card">
       <div>
         <div class="r-pub">${s.pubName}</div>
-        <div class="r-city">${s.city}</div>
+        <div class="r-city">${s.city} · ${s.submittedBy || "Anonymous"}</div>
       </div>
       <div style="text-align:right">
         <div class="r-price">€${s.price.toFixed(2)}</div>
