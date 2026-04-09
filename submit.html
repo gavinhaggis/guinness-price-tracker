@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submit a Price – Guinness Finland</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>🍺 <span>Guinness</span> Finland</h1>
+    <nav class="header-nav">
+      <a href="index.html">← Map</a>
+    </nav>
+  </header>
+
+  <div class="submit-container">
+    <h2>Submit a Pint Price</h2>
+    <p class="subtitle">Had a Guinness? Let Finland know what you paid. 🍺</p>
+
+    <div class="form-group">
+      <label for="pubName">Pub Name</label>
+      <input type="text" id="pubName" placeholder="e.g. The Dubliner" maxlength="80" autocomplete="off" />
+    </div>
+
+    <div class="form-group">
+      <label for="city">City</label>
+      <select id="city">
+        <option value="" disabled selected>Select a city...</option>
+        <option>Helsinki</option>
+        <option>Espoo</option>
+        <option>Tampere</option>
+        <option>Turku</option>
+        <option>Oulu</option>
+        <option>Jyväskylä</option>
+        <option>Lahti</option>
+        <option>Kuopio</option>
+        <option>Pori</option>
+        <option>Rovaniemi</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="price">Price (€)</label>
+      <div class="price-input-wrap">
+        <span class="currency">€</span>
+        <input type="number" id="price" placeholder="0.00" min="1" max="30" step="0.10" />
+      </div>
+    </div>
+
+    <!-- Honeypot – hidden from real users, bots fill this in -->
+    <div class="hp-field">
+      <input type="text" id="hp" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <button class="submit-btn" id="submitBtn">Submit Price</button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="submit.js"></script>
+</body>
+</html>
