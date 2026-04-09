@@ -28,7 +28,7 @@ body {
 header {
   background: var(--dark);
   border-bottom: 2px solid var(--gold);
-  padding: 14px 10px;
+  padding: 14px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -484,7 +484,33 @@ header h1 span { color: var(--cream); }
 /* ── Honeypot ── */
 .hp-field { display: none !important; }
 
-/* ── Responsive ── */
+/* ── QR Code Section ── */
+.qr-section {
+  text-align: center;
+  padding: 30px 16px 40px;
+  border-top: 1px solid var(--border);
+  margin-top: 10px;
+}
+
+.qr-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 16px;
+}
+
+.qr-section svg {
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.qr-url {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 12px;
+  letter-spacing: 0.5px;
+}
 @media (min-width: 600px) {
   .stats-grid { grid-template-columns: repeat(4, 1fr); }
   .city-grid { grid-template-columns: repeat(3, 1fr); }
