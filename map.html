@@ -181,8 +181,8 @@
           <div class="popup-pub">${pub.pubName}${stale ? '<span class="stale-badge">OLD</span>' : ''}</div>
           <div class="popup-city">${pub.city}</div>
           <div class="popup-price">€${pub.price.toFixed(2)}</div>
-          <div class="popup-meta">Based on ${pub.count} report${pub.count > 1 ? "s" : ""}</div>
-          <a class="popup-link" href="https://gavinhaggis.github.io/guinness-price-tracker/index.html" target="_blank">View full tracker →</a>
+          <div class="popup-meta">Based on ${pub.count} report${pub.count > 1 ? "s" : ""} · Added by ${pub.submittedBy || "Anonymous"}</div>
+          <a class="popup-link" href="https://guinness-price-tracker.github.io" target="_blank">View full tracker →</a>
         `);
 
         bounds.push(pos);
