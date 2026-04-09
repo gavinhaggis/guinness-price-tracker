@@ -5,6 +5,7 @@ import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebas
 const CITY_COORDS = {
   Helsinki:    [60.1699, 24.9384],
   Espoo:       [60.2052, 24.6559],
+  Vantaa:      [60.2934, 25.0378],
   Tampere:     [61.4978, 23.7610],
   Turku:       [60.4518, 22.2666],
   Oulu:        [65.0121, 25.4651],
