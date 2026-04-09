@@ -2,18 +2,19 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --black:   #0d0d0d;
-  --dark:    #1a1a1a;
-  --card:    #242424;
-  --border:  #333;
-  --gold:    #f5a623;
-  --cream:   #f5f0e8;
-  --text:    #e8e8e8;
-  --muted:   #888;
-  --green:   #2ecc71;
-  --red:     #e74c3c;
+  --black:   #222034;  /* Space Indigo  — page background    */
+  --dark:    #2a2740;  /* Space Indigo light — header/surfaces */
+  --card:    #2f2b45;  /* Space Indigo lifted — cards         */
+  --border:  #463e30;  /* Taupe — borders & dividers          */
+  --gold:    #ffce10;  /* Bright Amber — primary accent       */
+  --lemon:   #fbf236;  /* Bright Lemon — hover / highlights   */
+  --cream:   #ffffff;  /* White — headings                    */
+  --text:    #ffffff;  /* White — body text                   */
+  --muted:   #cbdbfc;  /* Periwinkle — secondary text         */
+  --green:   #2ecc71;  /* Price: cheap                        */
+  --red:     #e74c3c;  /* Price: expensive                    */
   --radius:  12px;
-  --shadow:  0 4px 20px rgba(0,0,0,0.4);
+  --shadow:  0 4px 20px rgba(34,32,52,0.6);
 }
 
 body {
@@ -57,7 +58,7 @@ header h1 span { color: var(--cream); }
   transition: background 0.2s;
 }
 
-.header-nav a:hover { background: rgba(245,166,35,0.3); }
+.header-nav a:hover { background: rgba(251,242,54,0.2); }
 
 /* ── Map ── */
 #map {
@@ -417,7 +418,7 @@ header h1 span { color: var(--cream); }
   transition: background 0.2s;
 }
 
-.locate-btn:hover { background: rgba(245,166,35,0.1); }
+.locate-btn:hover { background: rgba(255,206,16,0.1); }
 
 .divider {
   text-align: center;
@@ -462,7 +463,7 @@ header h1 span { color: var(--cream); }
 
 .suggestion-item:last-child { border-bottom: none; }
 .suggestion-item:hover,
-.suggestion-item.active { background: rgba(245,166,35,0.12); }
+.suggestion-item.active { background: rgba(255,206,16,0.12); }
 
 .suggestion-name    { font-size: 0.9rem; font-weight: 600; color: var(--text); }
 .suggestion-address { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
