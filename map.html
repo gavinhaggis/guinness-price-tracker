@@ -125,7 +125,14 @@
 
     const STALE_MS = 90 * 24 * 60 * 60 * 1000;
 
-    const map = L.map("map", { zoomControl: true });
+    const map = L.map("map", {
+      zoomControl: false,
+      tap: true,
+      tapTolerance: 15,
+      dragging: true,
+      scrollWheelZoom: false,
+    });
+    L.control.zoom({ position: "bottomright" }).addTo(map);
     L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
       attribution: '© <a href="https://carto.com/">CARTO</a>',
       maxZoom: 19,
@@ -182,7 +189,7 @@
           <div class="popup-city">${pub.city}</div>
           <div class="popup-price">€${pub.price.toFixed(2)}</div>
           <div class="popup-meta">Based on ${pub.count} report${pub.count > 1 ? "s" : ""} · Added by ${pub.submittedBy || "Anonymous"}</div>
-          <a class="popup-link" href="https://gavinhaggis.github.io/guinness-price-tracker/index.html" target="_blank">View full tracker →</a>
+          <a class="popup-link" href="https://guinness-price-tracker.github.io" target="_blank">View full tracker →</a>
         `);
 
         bounds.push(pos);
