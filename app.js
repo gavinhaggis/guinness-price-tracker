@@ -94,8 +94,14 @@ function renderMap(pubs) {
     m.bindPopup(`
       <div class="popup-pub">${pub.pubName}${stale ? '<span class="stale-badge">OLD</span>' : ''}</div>
       <div class="popup-city">${pub.city}</div>
-      <div class="popup-price">€${pub.price.toFixed(2)}</div>
+      <div class="popup-price" style="color:${pinColor(pub.price, stale)}">€${pub.price.toFixed(2)}</div>
       <div class="popup-meta">Based on ${pub.count} report${pub.count > 1 ? "s" : ""} · Added by ${pub.submittedBy || "Anonymous"}</div>
+      ${pub.lat && pub.lng ? `
+        <div style="display:flex;gap:6px;margin-top:10px">
+          <a class="popup-nav-btn" href="https://maps.apple.com/?daddr=${pub.lat},${pub.lng}&dirflg=w" target="_blank">🍏 Apple Maps</a>
+          <a class="popup-nav-btn" href="https://www.google.com/maps/dir/?api=1&destination=${pub.lat},${pub.lng}&travelmode=walking" target="_blank">🗺️ Google Maps</a>
+        </div>
+      ` : ""}
     `);
 
     markerStore[`${pub.pubName}__${pub.city}`] = m;
