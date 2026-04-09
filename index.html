@@ -1,11 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🍺 Guinness Price Tracker – Finland</title>
-  </head>
-  <body>
-    <h1>Coming soon...</h1>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🍺 Guinness Price Tracker – Finland</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+  <header>
+    <h1>🍺 <span>Guinness</span> Finland</h1>
+    <nav class="header-nav">
+      <a href="submit.html">+ Submit Price</a>
+    </nav>
+  </header>
+
+  <div id="map"></div>
+
+  <section class="stats-section">
+    <h2>Statistics</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="label">Cheapest</div>
+        <div class="value badge-cheap" id="stat-cheapest">—</div>
+        <div class="sub" id="stat-cheapest-pub">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Most Expensive</div>
+        <div class="value badge-expensive" id="stat-expensive">—</div>
+        <div class="sub" id="stat-expensive-pub">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Average Price</div>
+        <div class="value" id="stat-avg">—</div>
+        <div class="sub">across all pubs</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Pubs Tracked</div>
+        <div class="value" id="stat-count">—</div>
+        <div class="sub">submissions</div>
+      </div>
+    </div>
+
+    <h2 style="margin-bottom:14px">Cheapest Pints 🏆</h2>
+    <div class="leaderboard" id="leaderboard">
+      <div class="loading">Loading...</div>
+    </div>
+
+    <h2 style="margin: 20px 0 14px">City Averages</h2>
+    <div class="city-grid" id="city-averages">
+      <div class="loading">Loading...</div>
+    </div>
+  </section>
+
+  <section class="recent-section">
+    <h2>Recent Submissions</h2>
+    <div class="recent-list" id="recent-list">
+      <div class="loading">Loading...</div>
+    </div>
+  </section>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
 </html>
