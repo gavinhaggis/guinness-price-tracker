@@ -54,7 +54,26 @@
       vertical-align: middle;
     }
 
-    /* ── Loading overlay ── */
+    /* ── Locate button ── */
+    #locateBtn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 500;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--gold);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 8px 12px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: background 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    #locateBtn:hover  { background: rgba(255,206,16,0.15); border-color: var(--gold); }
+    #locateBtn.active { background: rgba(203,219,252,0.15); border-color: #cbdbfc; color: #cbdbfc; }
     #loading {
       position: absolute;
       inset: 0;
@@ -101,6 +120,7 @@
   <div id="loading">🍺 Loading pints...</div>
   <div id="map"></div>
 
+  <button id="locateBtn">📍 My Location</button>
   <div id="legend">
     <div class="legend-title">Price / Pint</div>
     <div class="legend-row"><div class="legend-dot" style="background:#2ecc71"></div> Under €8</div>
@@ -210,11 +230,26 @@
     });
 
     // ── User location ──
-    if (navigator.geolocation) {
+    let userMarker = null;
+    let accuracyCircle = null;
+    const locateBtn = document.getElementById("locateBtn");
+
+    locateBtn.addEventListener("click", () => {
+      if (!navigator.geolocation) {
+        locateBtn.textContent = "⚠️ Not supported";
+        return;
+      }
+
+      locateBtn.textContent = "⏳ Locating...";
+      locateBtn.disabled = true;
+
       navigator.geolocation.getCurrentPosition(
-        ({ coords: { latitude: lat, longitude: lng } }) => {
-          // Pulsing circle marker to distinguish from pub pins
-          const userMarker = L.circleMarker([lat, lng], {
+        ({ coords: { latitude: lat, longitude: lng, accuracy } }) => {
+          // Remove previous markers if button tapped again
+          if (userMarker)    { userMarker.remove();    userMarker = null; }
+          if (accuracyCircle){ accuracyCircle.remove(); accuracyCircle = null; }
+
+          userMarker = L.circleMarker([lat, lng], {
             radius: 8,
             fillColor: "#cbdbfc",
             color: "#ffffff",
@@ -224,21 +259,31 @@
 
           userMarker.bindPopup(`
             <div class="popup-pub">📍 You are here</div>
-            <div class="popup-city" style="color:#cbdbfc">Your current location</div>
-          `);
+            <div class="popup-city" style="color:#cbdbfc">Accuracy ~${Math.round(accuracy)}m</div>
+          `).openPopup();
 
-          // Accuracy circle
-          L.circle([lat, lng], {
-            radius: 80,
+          accuracyCircle = L.circle([lat, lng], {
+            radius: accuracy,
             fillColor: "#cbdbfc",
-            fillOpacity: 0.1,
+            fillOpacity: 0.08,
             color: "#cbdbfc",
             weight: 1,
           }).addTo(map);
+
+          map.flyTo([lat, lng], 15, { duration: 1.2 });
+
+          locateBtn.textContent = "📍 My Location";
+          locateBtn.disabled = false;
+          locateBtn.classList.add("active");
         },
-        () => {} // silently fail if user denies
+        () => {
+          locateBtn.textContent = "⚠️ Location denied";
+          locateBtn.disabled = false;
+          setTimeout(() => { locateBtn.textContent = "📍 My Location"; }, 2500);
+        },
+        { enableHighAccuracy: true, timeout: 8000 }
       );
-    }
+    });
   </script>
 </body>
 </html>
