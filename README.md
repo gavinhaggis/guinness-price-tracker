@@ -4,6 +4,8 @@
 
 A community-driven map for tracking the price of a pint of Guinness in pubs across Finland. Submit prices, explore the map, and find the best value stout near you.
 
+Inspired massively by the wonderful [Guinndex](https://guinndex.ai/). Same idea, but worse and Finnish 🇫🇮
+
 ---
 
 ## 🗺️ Live Site
