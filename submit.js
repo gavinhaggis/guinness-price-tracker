@@ -15,8 +15,9 @@ const pubInput    = document.getElementById("pubName");
 const suggestions = document.getElementById("pubSuggestions");
 const searchStatus = document.getElementById("pubSearchStatus");
 
-// ── Init pin map ──
-const pinMap = L.map("pin-map").setView([64.5, 26.0], 5);
+// ── Init pin map (after DOM is ready so container has dimensions) ──
+const pinMap = L.map("pin-map", { preferCanvas: true }).setView([64.5, 26.0], 5);
+setTimeout(() => pinMap.invalidateSize(), 100);
 L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
   attribution: '© <a href="https://carto.com/">CARTO</a>',
   maxZoom: 19,
