@@ -52,7 +52,11 @@ header h1 {
 
 header h1 span { color: var(--cream); }
 
-.header-nav a {
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
   color: var(--gold);
   text-decoration: none;
   font-size: 0.9rem;
