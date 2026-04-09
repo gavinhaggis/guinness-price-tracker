@@ -103,9 +103,9 @@
 
   <div id="legend">
     <div class="legend-title">Price / Pint</div>
-    <div class="legend-row"><div class="legend-dot" style="background:#2ecc71"></div> Under €7</div>
-    <div class="legend-row"><div class="legend-dot" style="background:#f5a623"></div> €7 – €9</div>
-    <div class="legend-row"><div class="legend-dot" style="background:#e74c3c"></div> Over €9</div>
+    <div class="legend-row"><div class="legend-dot" style="background:#2ecc71"></div> Under €8</div>
+    <div class="legend-row"><div class="legend-dot" style="background:#f5a623"></div> €8 – €10</div>
+    <div class="legend-row"><div class="legend-dot" style="background:#e74c3c"></div> Over €10</div>
     <div class="legend-row"><div class="legend-dot" style="background:#888; border: 1px dashed #e74c3c"></div> Stale data</div>
   </div>
 
@@ -139,9 +139,9 @@
     }).addTo(map);
 
     function pinColor(price, stale) {
-      if (stale) return "#666";
-      if (price < 7)  return "#2ecc71";
-      if (price <= 9) return "#f5a623";
+      if (stale)       return "#666";
+      if (price < 8)   return "#2ecc71";
+      if (price <= 10) return "#f5a623";
       return "#e74c3c";
     }
 
@@ -189,7 +189,7 @@
           <div class="popup-city">${pub.city}</div>
           <div class="popup-price">€${pub.price.toFixed(2)}</div>
           <div class="popup-meta">Based on ${pub.count} report${pub.count > 1 ? "s" : ""} · Added by ${pub.submittedBy || "Anonymous"}</div>
-          <a class="popup-link" href="https://gavinhaggis.github.io/guinness-price-tracker/index.html" target="_blank">View full tracker →</a>
+          <a class="popup-link" href="https://guinness-price-tracker.github.io" target="_blank">View full tracker →</a>
         `);
 
         bounds.push(pos);
