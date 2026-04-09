@@ -2,9 +2,9 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --black:   #222034;  /* Space Indigo  — page background    */
-  --dark:    #2a2740;  /* Space Indigo light — header/surfaces */
-  --card:    #2f2b45;  /* Space Indigo lifted — cards         */
+  --black:   #000000;  /* Space Indigo  — page background    */
+  --dark:    #222034;  /* Space Indigo light — header/surfaces */
+  --card:    #2a2740;  /* Space Indigo lifted — cards         */
   --border:  #463e30;  /* Taupe — borders & dividers          */
   --gold:    #ffce10;  /* Bright Amber — primary accent       */
   --lemon:   #fbf236;  /* Bright Lemon — hover / highlights   */
