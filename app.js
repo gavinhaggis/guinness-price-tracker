@@ -1,5 +1,6 @@
 import { db } from "./firebase.js";
 import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import L from "https://esm.sh/leaflet@1.9.4";
 
 // ── City coordinates for map pins ──
 const CITY_COORDS = {
