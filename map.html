@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guinness Price Map – Finland</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:  #0d0d0d;
+      --card:   #242424;
+      --border: #333;
+      --gold:   #f5a623;
+      --cream:  #f5f0e8;
+      --text:   #e8e8e8;
+      --muted:  #888;
+      --red:    #e74c3c;
+      --green:  #2ecc71;
+      --radius: 10px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    html, body { width: 100%; height: 100%; background: var(--black); }
+
+    #map { width: 100%; height: 100%; }
+
+    /* ── Popup ── */
+    .leaflet-popup-content-wrapper {
+      background: var(--card) !important;
+      color: var(--text) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: var(--radius) !important;
+      box-shadow: var(--shadow) !important;
+    }
+    .leaflet-popup-tip { background: var(--card) !important; }
+    .popup-pub   { font-size: 0.95rem; font-weight: 700; margin-bottom: 3px; font-family: -apple-system, sans-serif; }
+    .popup-city  { font-size: 0.75rem; color: var(--muted); margin-bottom: 8px; font-family: -apple-system, sans-serif; }
+    .popup-price { font-size: 1.4rem; font-weight: 700; color: var(--gold); font-family: -apple-system, sans-serif; }
+    .popup-meta  { font-size: 0.7rem; color: var(--muted); margin-top: 4px; font-family: -apple-system, sans-serif; }
+    .popup-link  { display: inline-block; margin-top: 8px; font-size: 0.75rem; color: var(--gold); text-decoration: none; font-family: -apple-system, sans-serif; }
+    .popup-link:hover { text-decoration: underline; }
+
+    .stale-badge {
+      display: inline-block;
+      font-size: 0.62rem;
+      background: rgba(231,76,60,0.2);
+      color: var(--red);
+      border: 1px solid var(--red);
+      border-radius: 4px;
+      padding: 1px 5px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    /* ── Loading overlay ── */
+    #loading {
+      position: absolute;
+      inset: 0;
+      background: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      font-family: -apple-system, sans-serif;
+      color: var(--muted);
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Price legend ── */
+    #legend {
+      position: absolute;
+      bottom: 24px;
+      left: 12px;
+      z-index: 500;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-family: -apple-system, sans-serif;
+      font-size: 0.75rem;
+      color: var(--muted);
+      box-shadow: var(--shadow);
+      pointer-events: none;
+    }
+    #legend .legend-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+      color: var(--muted);
+    }
+    .legend-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+
+  <div id="loading">🍺 Loading pints...</div>
+  <div id="map"></div>
+
+  <div id="legend">
+    <div class="legend-title">Price / Pint</div>
+    <div class="legend-row"><div class="legend-dot" style="background:#2ecc71"></div> Under €7</div>
+    <div class="legend-row"><div class="legend-dot" style="background:#f5a623"></div> €7 – €9</div>
+    <div class="legend-row"><div class="legend-dot" style="background:#e74c3c"></div> Over €9</div>
+    <div class="legend-row"><div class="legend-dot" style="background:#888; border: 1px dashed #e74c3c"></div> Stale data</div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module">
+    import { db } from "./firebase.js";
+    import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const CITY_COORDS = {
+      Helsinki:   [60.1699, 24.9384], Espoo:      [60.2052, 24.6559],
+      Tampere:    [61.4978, 23.7610], Turku:      [60.4518, 22.2666],
+      Oulu:       [65.0121, 25.4651], Jyväskylä: [62.2426, 25.7473],
+      Lahti:      [60.9827, 25.6612], Kuopio:     [62.8924, 27.6770],
+      Pori:       [61.4851, 21.7833], Rovaniemi:  [66.5039, 25.7294],
+      Other:      [64.9600, 27.5900],
+    };
+
+    const STALE_MS = 90 * 24 * 60 * 60 * 1000;
+
+    const map = L.map("map", { zoomControl: true });
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      attribution: '© <a href="https://carto.com/">CARTO</a>',
+      maxZoom: 19,
+    }).addTo(map);
+
+    function pinColor(price, stale) {
+      if (stale) return "#666";
+      if (price < 7)  return "#2ecc71";
+      if (price <= 9) return "#f5a623";
+      return "#e74c3c";
+    }
+
+    onValue(ref(db, "submissions"), (snapshot) => {
+      document.getElementById("loading").style.display = "none";
+      const raw = snapshot.val() || {};
+      const submissions = Object.values(raw);
+      if (!submissions.length) return;
+
+      // Build latest-price-per-pub map
+      const pubMap = {};
+      submissions.forEach(s => {
+        const key = `${s.pubName}__${s.city}`;
+        if (!pubMap[key] || s.timestamp > pubMap[key].timestamp) {
+          pubMap[key] = { ...s, count: (pubMap[key]?.count || 0) + 1 };
+        } else {
+          pubMap[key].count = (pubMap[key].count || 0) + 1;
+        }
+      });
+
+      const pubs = Object.values(pubMap);
+      const bounds = [];
+
+      pubs.forEach(pub => {
+        const jitter = () => (Math.random() - 0.5) * 0.06;
+        const fallback = CITY_COORDS[pub.city] || CITY_COORDS["Other"];
+        const pos = (pub.lat && pub.lng)
+          ? [pub.lat, pub.lng]
+          : [fallback[0] + jitter(), fallback[1] + jitter()];
+
+        const stale = Date.now() - pub.timestamp > STALE_MS;
+        const color = pinColor(pub.price, stale);
+
+        const m = L.circleMarker(pos, {
+          radius: 9,
+          fillColor: color,
+          color: "#0d0d0d",
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.9,
+        }).addTo(map);
+
+        m.bindPopup(`
+          <div class="popup-pub">${pub.pubName}${stale ? '<span class="stale-badge">OLD</span>' : ''}</div>
+          <div class="popup-city">${pub.city}</div>
+          <div class="popup-price">€${pub.price.toFixed(2)}</div>
+          <div class="popup-meta">Based on ${pub.count} report${pub.count > 1 ? "s" : ""}</div>
+          <a class="popup-link" href="https://guinness-price-tracker.github.io" target="_blank">View full tracker →</a>
+        `);
+
+        bounds.push(pos);
+      });
+
+      // Fit map to show all pins with padding
+      if (bounds.length === 1) {
+        map.setView(bounds[0], 14);
+      } else {
+        map.fitBounds(bounds, { padding: [40, 40] });
+      }
+    });
+  </script>
+</body>
+</html>
