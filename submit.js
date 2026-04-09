@@ -98,32 +98,36 @@ pubInput.addEventListener("keydown", (e) => {
 });
 
 async function searchOSM(query) {
-  // Overpass query: pubs and bars in Finland matching the name
-  const overpassQuery = `
-    [out:json][timeout:8];
-    area["ISO3166-1"="FI"]->.fi;
-    (
-      node["amenity"~"pub|bar"]["name"~"${query}",i](area.fi);
-      way["amenity"~"pub|bar"]["name"~"${query}",i](area.fi);
-    );
-    out center 8;
-  `;
+  const url = `https://nominatim.openstreetmap.org/search?` + new URLSearchParams({
+    q: query,
+    countrycodes: "fi",
+    featuretype: "amenity",
+    amenity: "pub",
+    format: "jsonv2",
+    addressdetails: 1,
+    limit: 8,
+  });
 
   try {
-    const res = await fetch("https://overpass-api.de/api/interpreter", {
-      method: "POST",
-      body: overpassQuery,
+    const res = await fetch(url, {
+      headers: { "Accept-Language": "en" },
     });
-    const data = await res.json();
-    const results = data.elements || [];
 
-    if (!results.length) {
+    if (!res.ok) throw new Error("Nominatim error");
+    const results = await res.json();
+
+    // Filter to pubs and bars only
+    const pubs = results.filter(r =>
+      r.type === "pub" || r.type === "bar" || r.category === "amenity"
+    );
+
+    if (!pubs.length) {
       searchStatus.textContent = "No matching pubs found — you can still enter manually.";
       return;
     }
 
-    searchStatus.textContent = `${results.length} pub${results.length > 1 ? "s" : ""} found`;
-    renderSuggestions(results);
+    searchStatus.textContent = `${pubs.length} pub${pubs.length > 1 ? "s" : ""} found`;
+    renderSuggestions(pubs);
 
   } catch {
     searchStatus.textContent = "Search unavailable — enter pub name manually.";
@@ -133,12 +137,16 @@ async function searchOSM(query) {
 function renderSuggestions(results) {
   suggestions.innerHTML = "";
   results.forEach(place => {
-    const name    = place.tags?.name || "Unknown";
-    const city    = place.tags?.["addr:city"] || place.tags?.["addr:municipality"] || "";
-    const street  = place.tags?.["addr:street"] || "";
+    const name    = place.name || place.display_name.split(",")[0];
+    const city    = place.address?.city
+                 || place.address?.town
+                 || place.address?.municipality
+                 || place.address?.village
+                 || "";
+    const street  = place.address?.road || "";
     const address = [street, city].filter(Boolean).join(", ") || "Finland";
-    const lat     = place.lat ?? place.center?.lat;
-    const lng     = place.lon ?? place.center?.lon;
+    const lat     = parseFloat(place.lat);
+    const lng     = parseFloat(place.lon);
 
     const item = document.createElement("div");
     item.className = "suggestion-item";
