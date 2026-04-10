@@ -56,7 +56,6 @@ header h1 span { color: var(--cream); }
   display: flex;
   align-items: center;
   gap: 8px;
-}
   color: var(--gold);
   text-decoration: none;
   font-size: 0.9rem;
