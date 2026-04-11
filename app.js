@@ -35,7 +35,7 @@ function priceColor(price) {
 
 // ── Marker store (key = pubName__city) ──
 const markerStore = {};
-const map = L.map("map").setView([63, 26.0], 4.4);
+const map = L.map("map").setView([61, 25.0], 6);
 L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
   attribution: '© <a href="https://carto.com/">CARTO</a>',
   maxZoom: 19,
