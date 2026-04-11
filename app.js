@@ -22,20 +22,20 @@ const STALE_MS = 90 * 24 * 60 * 60 * 1000; // 90 days
 
 function pinColor(price, stale) {
   if (stale)       return "#666";
-  if (price < 8)   return "#2ecc71";
+  if (price < 9)   return "#2ecc71";
   if (price <= 10) return "#f5a623";
   return "#e74c3c";
 }
 
 function priceColor(price) {
-  if (price < 8)   return "var(--green)";
+  if (price < 9)   return "var(--green)";
   if (price <= 10) return "var(--gold)";
   return "var(--red)";
 }
 
 // ── Marker store (key = pubName__city) ──
 const markerStore = {};
-const map = L.map("map").setView([64.5, 26.0], 5);
+const map = L.map("map").setView([63, 26.0], 4.4);
 L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
   attribution: '© <a href="https://carto.com/">CARTO</a>',
   maxZoom: 19,
@@ -128,7 +128,7 @@ function renderStats(pubs) {
 function flyToMarker(pubName, city) {
   const m = markerStore[`${pubName}__${city}`];
   if (!m) return;
-  map.flyTo(m.getLatLng(), 15, { duration: 1 });
+  map.flyTo(m.getLatLng(), 14, { duration: 1 });
   setTimeout(() => m.openPopup(), 1000);
   window.scrollTo({ top: 0, behavior: "smooth" });
 }

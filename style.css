@@ -18,7 +18,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Montserrat', sans-serif;
   background: var(--black);
   color: var(--text);
   min-height: 100vh;
@@ -45,7 +45,7 @@ header {
 
 header h1 {
   font-size: 1.2rem;
-  font-weight: 700;
+  font-weight: 300;
   color: var(--gold);
   letter-spacing: 0.5px;
 }
@@ -61,7 +61,7 @@ header h1 span { color: var(--cream); }
   font-size: 0.9rem;
   font-weight: 600;
   background: rgba(245,166,35,0.15);
-  padding: 8px 14px;
+  padding: 8px 10px;
   border-radius: 20px;
   border: 1px solid var(--gold);
   transition: background 0.2s;
