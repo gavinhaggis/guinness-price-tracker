@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Guinness Price Map – Finland</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="icon" type="image/x-icon" href="logo.ico">
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -120,11 +122,94 @@
   <div id="loading">🍺 Loading pints...</div>
   <div id="map"></div>
 
-  <button id="locateBtn">📍 My Location</button>
+  <button id="locateBtn">📍 My Location <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 -1000 1000 1000" width="20px" fill="var(--gold)"><path d="M40-240q9-107 65.5-197T256-580l-74-128q-6-9-3-19t13-15q8-5 18-2t16 12l74 128q86-36 180-36t180 36l74-128q6-9 16-12t18 2q10 5 13 15t-3 19l-74 128q94 53 150.5 143T920-240H40Zm275.5-124.5Q330-379 330-400t-14.5-35.5Q301-450 280-450t-35.5 14.5Q230-421 230-400t14.5 35.5Q259-350 280-350t35.5-14.5Zm400 0Q730-379 730-400t-14.5-35.5Q701-450 680-450t-35.5 14.5Q630-421 630-400t14.5 35.5Q659-350 680-350t35.5-14.5Z"/></svg></button>
   <div id="legend">
-    <div class="legend-title">Price / Pint</div>
-    <div class="legend-row"><div class="legend-dot" style="background:#2ecc71"></div> Under €8</div>
-    <div class="legend-row"><div class="legend-dot" style="background:#f5a623"></div> €8 – €10</div>
+    <div class="legend-title"> <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 480 320" preserveAspectRatio="xMidYMid meet"
+      rendering="crispEdges">
+      <rect x="120" y="0" width="40" height="40" style="fill:#fbf236" />
+      <rect x="160" y="0" width="40" height="40" style="fill:#fbf236" />
+      <rect x="200" y="0" width="40" height="40" style="fill:#fbf236" />
+      <rect x="240" y="0" width="40" height="40" style="fill:#fbf236" />
+      <rect x="280" y="0" width="40" height="40" style="fill:#fbf236" />
+      <rect x="320" y="0" width="40" height="40" style="fill:#fbf236" />
+      <rect x="360" y="0" width="40" height="40" style="fill:#fbf236" />
+      <rect x="400" y="0" width="40" height="40" style="fill:#fbf236" />
+      <rect x="0" y="40" width="40" height="40" style="fill:#fbf236" />
+      <rect x="40" y="40" width="40" height="40" style="fill:#fbf236" />
+      <rect x="80" y="40" width="40" height="40" style="fill:#fbf236" />
+      <rect x="120" y="40" width="40" height="40" style="fill:#fbf236" />
+      <rect x="160" y="40" width="40" height="40" style="fill:#222034" />
+      <rect x="200" y="40" width="40" height="40" style="fill:#222034" />
+      <rect x="240" y="40" width="40" height="40" style="fill:#222034" />
+      <rect x="280" y="40" width="40" height="40" style="fill:#222034" />
+      <rect x="320" y="40" width="40" height="40" style="fill:#222034" />
+      <rect x="360" y="40" width="40" height="40" style="fill:#222034" />
+      <rect x="400" y="40" width="40" height="40" style="fill:#fbf236" />
+      <rect x="440" y="40" width="40" height="40" style="fill:#fbf236" />
+      <rect x="0" y="80" width="40" height="40" style="fill:#ffce10" />
+      <rect x="40" y="80" width="40" height="40" style="fill:#222034" />
+      <rect x="80" y="80" width="40" height="40" style="fill:#222034" />
+      <rect x="120" y="80" width="40" height="40" style="fill:#222034" />
+      <rect x="160" y="80" width="40" height="40" style="fill:#222034" />
+      <rect x="200" y="80" width="40" height="40" style="fill:#222034" />
+      <rect x="240" y="80" width="40" height="40" style="fill:#222034" />
+      <rect x="280" y="80" width="40" height="40" style="fill:#222034" />
+      <rect x="320" y="80" width="40" height="40" style="fill:#222034" />
+      <rect x="360" y="80" width="40" height="40" style="fill:#222034" />
+      <rect x="400" y="80" width="40" height="40" style="fill:#222034" />
+      <rect x="440" y="80" width="40" height="40" style="fill:#fbf236" />
+      <rect x="0" y="120" width="40" height="40" style="fill:#ffce10" />
+      <rect x="40" y="120" width="40" height="40" style="fill:#ffce10" />
+      <rect x="80" y="120" width="40" height="40" style="fill:#222034" />
+      <rect x="120" y="120" width="40" height="40" style="fill:#222034" />
+      <rect x="160" y="120" width="40" height="40" style="fill:#222034" />
+      <rect x="200" y="120" width="40" height="40" style="fill:#ffce10" />
+      <rect x="240" y="120" width="40" height="40" style="fill:#fbf236" />
+      <rect x="280" y="120" width="40" height="40" style="fill:#222034" />
+      <rect x="320" y="120" width="40" height="40" style="fill:#222034" />
+      <rect x="360" y="120" width="40" height="40" style="fill:#fbf236" />
+      <rect x="400" y="120" width="40" height="40" style="fill:#222034" />
+      <rect x="440" y="120" width="40" height="40" style="fill:#fbf236" />
+      <rect x="40" y="160" width="40" height="40" style="fill:#ffce10" />
+      <rect x="80" y="160" width="40" height="40" style="fill:#ffce10" />
+      <rect x="120" y="160" width="40" height="40" style="fill:#222034" />
+      <rect x="160" y="160" width="40" height="40" style="fill:#222034" />
+      <rect x="200" y="160" width="40" height="40" style="fill:#222034" />
+      <rect x="240" y="160" width="40" height="40" style="fill:#fbf236" />
+      <rect x="280" y="160" width="40" height="40" style="fill:#222034" />
+      <rect x="320" y="160" width="40" height="40" style="fill:#222034" />
+      <rect x="360" y="160" width="40" height="40" style="fill:#fbf236" />
+      <rect x="400" y="160" width="40" height="40" style="fill:#222034" />
+      <rect x="440" y="160" width="40" height="40" style="fill:#fbf236" />
+      <rect x="80" y="200" width="40" height="40" style="fill:#ffce10" />
+      <rect x="120" y="200" width="40" height="40" style="fill:#ffce10" />
+      <rect x="160" y="200" width="40" height="40" style="fill:#222034" />
+      <rect x="200" y="200" width="40" height="40" style="fill:#222034" />
+      <rect x="240" y="200" width="40" height="40" style="fill:#222034" />
+      <rect x="280" y="200" width="40" height="40" style="fill:#222034" />
+      <rect x="320" y="200" width="40" height="40" style="fill:#222034" />
+      <rect x="360" y="200" width="40" height="40" style="fill:#222034" />
+      <rect x="400" y="200" width="40" height="40" style="fill:#222034" />
+      <rect x="440" y="200" width="40" height="40" style="fill:#fbf236" />
+      <rect x="120" y="240" width="40" height="40" style="fill:#ffce10" />
+      <rect x="160" y="240" width="40" height="40" style="fill:#ffce10" />
+      <rect x="200" y="240" width="40" height="40" style="fill:#222034" />
+      <rect x="240" y="240" width="40" height="40" style="fill:#222034" />
+      <rect x="280" y="240" width="40" height="40" style="fill:#222034" />
+      <rect x="320" y="240" width="40" height="40" style="fill:#222034" />
+      <rect x="360" y="240" width="40" height="40" style="fill:#222034" />
+      <rect x="400" y="240" width="40" height="40" style="fill:#fbf236" />
+      <rect x="440" y="240" width="40" height="40" style="fill:#fbf236" />
+      <rect x="160" y="280" width="40" height="40" style="fill:#ffce10" />
+      <rect x="200" y="280" width="40" height="40" style="fill:#ffce10" />
+      <rect x="240" y="280" width="40" height="40" style="fill:#ffce10" />
+      <rect x="280" y="280" width="40" height="40" style="fill:#ffce10" />
+      <rect x="320" y="280" width="40" height="40" style="fill:#ffce10" />
+      <rect x="360" y="280" width="40" height="40" style="fill:#ffce10" />
+      <rect x="400" y="280" width="40" height="40" style="fill:#ffce10" />
+    </svg> Price / Pint</div>
+    <div class="legend-row"><div class="legend-dot" style="background:#2ecc71"></div> Under €9</div>
+    <div class="legend-row"><div class="legend-dot" style="background:#f5a623"></div> €9 – €10</div>
     <div class="legend-row"><div class="legend-dot" style="background:#e74c3c"></div> Over €10</div>    <div class="legend-row"><div class="legend-dot" style="background:#cbdbfc; border: 2px solid #ffffff"></div> Your location</div>
   </div>
 

@@ -103,7 +103,7 @@ async function searchOSM(query) {
     q: query,
     countrycodes: "fi",
     featuretype: "amenity",
-    amenity: "pub",
+    // amenity: "pub",
     format: "jsonv2",
     addressdetails: 1,
     limit: 8,
