@@ -28,7 +28,7 @@ body {
 header {
   background: var(--dark);
   border-bottom: 2px solid var(--gold);
-  padding: 14px 20px;
+  padding: 10px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -45,9 +45,8 @@ header {
 
 header h1 {
   font-size: 1.2rem;
-  font-weight: 300;
+  font-weight: 900;
   color: var(--gold);
-  letter-spacing: 0.5px;
 }
 
 header h1 span { color: var(--cream); }
@@ -58,10 +57,10 @@ header h1 span { color: var(--cream); }
   gap: 8px;
   color: var(--gold);
   text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 900;
   background: rgba(245,166,35,0.15);
-  padding: 8px 10px;
+  padding: 4px 10px;
   border-radius: 20px;
   border: 1px solid var(--gold);
   transition: background 0.2s;
@@ -89,13 +88,15 @@ header h1 span { color: var(--cream); }
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 14px;
+  font-weight: 900;
+
 }
 
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 .stat-card {
@@ -132,7 +133,7 @@ header h1 span { color: var(--cream); }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 .leaderboard-header {
@@ -191,6 +192,7 @@ header h1 span { color: var(--cream); }
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+  padding-bottom: 40px;
 }
 
 .city-card {
