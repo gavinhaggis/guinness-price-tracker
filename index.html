@@ -20,7 +20,9 @@
     <nav class="header-nav" style="color: #ffce10">
       <a href="map.html" style="color: #ffffff; text-decoration: none;">Map</a>
       |
-      <a href="submit.html" style="color: #ffce10; text-decoration: none;">Submit Price</a>
+      <a href="submissions.html" style="color: #ffffff; text-decoration: none;">List</a>
+      |
+      <a href="submit.html" style="color: #ffce10; text-decoration: none;">Submit</a>
     </nav>
   </header>
 
@@ -47,7 +49,7 @@
       <div class="stat-card">
         <div class="label">Pubs Tracked</div>
         <div class="value" id="stat-count">—</div>
-        <div class="sub">submissions</div>
+        <div class="sub">unique locations</div>
       </div>
     </div>
 
@@ -58,6 +60,13 @@
 
     <h2 style="margin: 20px 0 14px">City Averages</h2>
     <div class="city-grid" id="city-averages">
+      <div class="loading">Loading...</div>
+    </div>
+  </section>
+
+  <section class="stats-section" style="padding-top:0">
+    <h2 style="margin-bottom:14px">Top Spotters 🏅</h2>
+    <div class="leaderboard" id="scoreboard">
       <div class="loading">Loading...</div>
     </div>
   </section>

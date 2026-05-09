@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Submissions – Guinness Finland</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/x-icon" href="logo.ico">
+  <style>
+    .filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .filters select {
+      flex: 1;
+      min-width: 130px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 0.9rem;
+      padding: 10px 12px;
+      outline: none;
+      -webkit-appearance: none;
+      transition: border-color 0.2s;
+    }
+    .filters select:focus { border-color: var(--gold); }
+    .filters select option { background: var(--card); }
+    .result-count {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .sub-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .sub-card .s-pub { font-size: 0.9rem; font-weight: 600; }
+    .sub-card .s-meta { font-size: 0.75rem; color: var(--muted); margin-top: 3px; }
+    .sub-card .s-price { font-size: 1.1rem; font-weight: 700; }
+    .sub-card .s-time { font-size: 0.7rem; color: var(--muted); text-align: right; margin-top: 3px; }
+    .submissions-section { padding: 20px 16px 40px; }
+    .submissions-section h2 {
+      font-size: 1rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      font-weight: 900;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-brand">
+      <h1><span>Guinness</span> Finland</h1>
+    </div>
+    <nav class="header-nav" style="color: #ffce10">
+      <a href="index.html" style="color: #ffffff; text-decoration: none;">Home</a>
+      |
+      <a href="submit.html" style="color: #ffce10; text-decoration: none;">Submit Price</a>
+    </nav>
+  </header>
+
+  <section class="submissions-section">
+    <h2>All Submissions</h2>
+
+    <div class="filters">
+      <select id="filter-city">
+        <option value="">All Cities</option>
+      </select>
+      <select id="filter-submitter">
+        <option value="">All Spotters</option>
+      </select>
+      <select id="sort-by">
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+      </select>
+    </div>
+
+    <div class="result-count" id="result-count"></div>
+    <div id="submissions-list"><div class="loading">Loading...</div></div>
+  </section>
+
+  <script type="module">
+    import { db } from "./firebase.js";
+    import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    let allSubmissions = [];
+
+    const citySelect      = document.getElementById("filter-city");
+    const submitterSelect = document.getElementById("filter-submitter");
+    const sortSelect      = document.getElementById("sort-by");
+    const list            = document.getElementById("submissions-list");
+    const countEl         = document.getElementById("result-count");
+
+    onValue(ref(db, "submissions"), (snapshot) => {
+      const raw = snapshot.val() || {};
+      allSubmissions = Object.values(raw);
+
+      const cities     = [...new Set(allSubmissions.map(s => s.city))].sort();
+      const submitters = [...new Set(allSubmissions.map(s => s.submittedBy || "Anonymous"))].sort();
+
+      cities.forEach(c => {
+        const o = document.createElement("option");
+        o.value = c; o.textContent = c;
+        citySelect.appendChild(o);
+      });
+
+      submitters.forEach(n => {
+        const o = document.createElement("option");
+        o.value = n; o.textContent = n;
+        submitterSelect.appendChild(o);
+      });
+
+      render();
+    });
+
+    citySelect.addEventListener("change", render);
+    submitterSelect.addEventListener("change", render);
+    sortSelect.addEventListener("change", render);
+
+    function render() {
+      const city      = citySelect.value;
+      const submitter = submitterSelect.value;
+      const sort      = sortSelect.value;
+
+      const filtered = allSubmissions.filter(s => {
+        if (city && s.city !== city) return false;
+        if (submitter && (s.submittedBy || "Anonymous") !== submitter) return false;
+        return true;
+      });
+
+      const sorters = {
+        "newest":     (a, b) => b.timestamp - a.timestamp,
+        "oldest":     (a, b) => a.timestamp - b.timestamp,
+        "price-asc":  (a, b) => a.price - b.price,
+        "price-desc": (a, b) => b.price - a.price,
+      };
+      filtered.sort(sorters[sort]);
+
+      countEl.textContent = `Showing ${filtered.length} of ${allSubmissions.length} submissions`;
+
+      if (!filtered.length) {
+        list.innerHTML = `<div class="loading">No submissions match the selected filters.</div>`;
+        return;
+      }
+
+      list.innerHTML = filtered.map(s => {
+        const params = new URLSearchParams({ pub: s.pubName, city: s.city });
+        return `
+          <a class="sub-card" href="index.html?${params}" style="text-decoration:none;display:flex;">
+            <div>
+              <div class="s-pub">${s.pubName}</div>
+              <div class="s-meta">${s.city} · ${s.submittedBy || "Anonymous"}</div>
+            </div>
+            <div style="text-align:right;margin-left:auto">
+              <div class="s-price" style="color:${priceColor(s.price)}">€${s.price.toFixed(2)}</div>
+              <div class="s-time">${timeAgo(s.timestamp)}</div>
+            </div>
+          </a>
+        `;
+      }).join("");
+    }
+
+    function priceColor(price) {
+      if (price < 9)   return "var(--green)";
+      if (price <= 10) return "var(--gold)";
+      return "var(--red)";
+    }
+
+    function timeAgo(ts) {
+      const diff = Date.now() - ts;
+      const mins = Math.floor(diff / 60000);
+      if (mins < 1)  return "just now";
+      if (mins < 60) return `${mins}m ago`;
+      const hrs = Math.floor(mins / 60);
+      if (hrs < 24)  return `${hrs}h ago`;
+      const days = Math.floor(hrs / 24);
+      return `${days}d ago`;
+    }
+  </script>
+</body>
+</html>

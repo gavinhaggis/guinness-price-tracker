@@ -56,20 +56,37 @@ onValue(submissionsRef, (snapshot) => {
   renderLeaderboard(pubMap);
   renderCityAverages(pubMap);
   renderRecent(submissions);
+  renderScoreboard(submissions);
+  focusFromParams();
 });
 
-// ── Group submissions by pub name (latest price per pub) ──
+// ── Group submissions by pub name (latest price, averaged coords) ──
 function buildPubMap(submissions) {
   const pubs = {};
   submissions.forEach(s => {
     const key = `${s.pubName}__${s.city}`;
-    if (!pubs[key] || s.timestamp > pubs[key].timestamp) {
-      pubs[key] = { ...s, count: (pubs[key]?.count || 0) + 1 };
-    } else {
-      pubs[key].count = (pubs[key].count || 0) + 1;
+    if (!pubs[key]) {
+      pubs[key] = { ...s, count: 0, _lats: [], _lngs: [] };
+    }
+    pubs[key].count += 1;
+    if (s.lat && s.lng) {
+      pubs[key]._lats.push(s.lat);
+      pubs[key]._lngs.push(s.lng);
+    }
+    if (s.timestamp > pubs[key].timestamp) {
+      const { count, _lats, _lngs } = pubs[key];
+      pubs[key] = { ...s, count, _lats, _lngs };
     }
   });
-  return Object.values(pubs);
+  return Object.values(pubs).map(pub => {
+    if (pub._lats.length > 0) {
+      pub.lat = pub._lats.reduce((a, b) => a + b, 0) / pub._lats.length;
+      pub.lng = pub._lngs.reduce((a, b) => a + b, 0) / pub._lngs.length;
+    }
+    delete pub._lats;
+    delete pub._lngs;
+    return pub;
+  });
 }
 
 // ── Map pins ──
@@ -146,7 +163,7 @@ function renderLeaderboard(pubs) {
         <div class="rank">${i + 1}</div>
         <div class="pub-info">
           <div class="pub-name">${p.pubName}</div>
-          <div class="pub-city">${p.city}</div>
+          <div class="pub-city">${p.city} · ${p.count} report${p.count !== 1 ? "s" : ""}</div>
         </div>
         <div class="price" style="color:${priceColor(p.price)}">€${p.price.toFixed(2)}</div>
       </div>
@@ -189,6 +206,39 @@ function renderRecent(submissions) {
       </div>
     </div>
   `).join("");
+}
+
+// ── Scoreboard ──
+function renderScoreboard(submissions) {
+  const counts = {};
+  submissions.forEach(s => {
+    const name = s.submittedBy || "Anonymous";
+    counts[name] = (counts[name] || 0) + 1;
+  });
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  const medals = ["🥇", "🥈", "🥉"];
+  document.getElementById("scoreboard").innerHTML = `
+    <div class="leaderboard-header">
+      <span>Spotter</span><span>Pints Tracked</span>
+    </div>
+    ${sorted.map(([name, count], i) => `
+      <div class="leaderboard-row">
+        <div class="rank">${medals[i] ?? i + 1}</div>
+        <div class="pub-info">
+          <div class="pub-name">${name}</div>
+        </div>
+        <div class="price" style="color:var(--gold)">${count} pint${count !== 1 ? "s" : ""}</div>
+      </div>
+    `).join("")}
+  `;
+}
+
+// ── Focus pin from URL params (e.g. ?pub=O'Connell's&city=Helsinki) ──
+function focusFromParams() {
+  const params = new URLSearchParams(window.location.search);
+  const pub  = params.get("pub");
+  const city = params.get("city");
+  if (pub && city) flyToMarker(pub, city);
 }
 
 // ── Expose flyToMarker globally (required for inline onclick handlers) ──
