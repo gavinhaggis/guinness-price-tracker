@@ -18,7 +18,7 @@ const CITY_COORDS = {
   Other:       [64.9600, 27.5900],
 };
 
-const STALE_MS = 90 * 24 * 60 * 60 * 1000; // 90 days
+const STALE_MS = 90 * 24 * 60 * 60 * 1000 * 4; // 360 days
 
 function pinColor(price, stale) {
   if (stale)       return "#666";
